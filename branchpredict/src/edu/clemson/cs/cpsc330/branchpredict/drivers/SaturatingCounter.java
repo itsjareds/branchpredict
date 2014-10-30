@@ -1,5 +1,5 @@
 /**
- * 
+ * N-bit Saturating Counter Branch Predictor
  */
 package edu.clemson.cs.cpsc330.branchpredict.drivers;
 
@@ -16,8 +16,9 @@ import edu.clemson.cs.cpsc330.branchpredict.common.BranchLog;
  *
  */
 public class SaturatingCounter {
-	private final static int N = 16;
-	private final static int SIZE = (int) Math.pow(2, N);
+	private final static int N = 9;
+	private final static int INDEX_N_BITS = 16;
+	private final static int SIZE = (int) Math.pow(2, INDEX_N_BITS);
 
 	private static int[] branchHistory = new int[SIZE];
 	private static BranchLog bl = new BranchLog();
@@ -30,11 +31,16 @@ public class SaturatingCounter {
 			// Input coming from plaintext file
 			try {
 				System.setIn(new FileInputStream(args[0]));
-			} catch (FileNotFoundException e1) {
+			} catch (FileNotFoundException e) {
 				System.out.println("Error opening input file " + args[0]);
-				e1.printStackTrace();
+				e.printStackTrace();
 				System.exit(1);
 			}
+		}
+
+		if (N < 1) {
+			System.out.println("Value for N not sane. N must be 1 or larger.");
+			System.exit(1);
 		}
 
 		InputStreamReader isReader = new InputStreamReader(System.in);
@@ -64,10 +70,12 @@ public class SaturatingCounter {
 							bl.incrementSuccesses();
 						else
 							bl.incrementFailures();
+					} else {
+						System.out.println("Malformed input line: " + inputStr);
+						System.exit(1);
 					}
-				} else {
+				} else
 					break;
-				}
 			} catch (Exception e) {
 				System.out.println("Exception while reading line!");
 				e.printStackTrace();
@@ -83,11 +91,11 @@ public class SaturatingCounter {
 	}
 
 	private static int incrementState(int state) {
-		return (state + 1 < 4) ? state + 1 : state;
+		return (state + 1 < Math.pow(2, N)) ? state + 1 : state;
 	}
 
 	private static boolean predictBranch(int index) {
-		return (branchHistory[index] > 1);
+		return (branchHistory[index] >= Math.pow(2, N - 1));
 	}
 
 	private static int getIndex(Long address) {
