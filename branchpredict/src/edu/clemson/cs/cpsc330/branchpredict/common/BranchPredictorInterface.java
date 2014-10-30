@@ -1,4 +1,4 @@
-package edu.clemson.cs.cpsc330.branchpredict.drivers;
+package edu.clemson.cs.cpsc330.branchpredict.common;
 
 public interface BranchPredictorInterface {
 	public void readInput();

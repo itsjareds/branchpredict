@@ -1,14 +1,12 @@
 /**
  * 
  */
-package edu.clemson.cs.cpsc330.branchpredict.drivers;
+package edu.clemson.cs.cpsc330.branchpredict.common;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
-
-import edu.clemson.cs.cpsc330.branchpredict.common.BranchLog;
 
 /**
  * @author Jared Klingenberger <klinge2@clemson.edu>

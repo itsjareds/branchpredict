@@ -3,6 +3,8 @@
  */
 package edu.clemson.cs.cpsc330.branchpredict.drivers;
 
+import edu.clemson.cs.cpsc330.branchpredict.common.BranchPredictor;
+
 /**
  * @author jared
  *
