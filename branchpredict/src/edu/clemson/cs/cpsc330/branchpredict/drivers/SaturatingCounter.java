@@ -99,8 +99,7 @@ public class SaturatingCounter {
 	}
 
 	private static int getIndex(Long address) {
-		Long modded = address % SIZE;
-		return modded.intValue();
+		return new Long(address % SIZE).intValue();
 	}
 
 }
