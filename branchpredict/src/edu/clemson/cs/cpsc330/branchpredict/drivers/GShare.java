@@ -1,20 +1,20 @@
 /**
- * N-bit Saturating Counter Branch Predictor
+ * 
  */
 package edu.clemson.cs.cpsc330.branchpredict.drivers;
 
 /**
- * @author Jared Klingenberger
- * @author Shi Zheng
+ * @author jared
  *
  */
-public class SaturatingCounter extends BranchPredictor {
+public class GShare extends BranchPredictor {
 
 	private static final int N = 2;
 	private static final int INDEX_LAST_N_BITS = 16;
 	private static final int SIZE = 1 << INDEX_LAST_N_BITS;
 
-	private static int[] branchHistoryTable = new int[SIZE];
+	private static int[] patternHistoryTable = new int[SIZE];
+	private static int globalBhsr = 0;
 
 	{
 		if (N < 1) {
@@ -23,11 +23,11 @@ public class SaturatingCounter extends BranchPredictor {
 		}
 	}
 
-	public SaturatingCounter() {
+	public GShare() {
 		super();
 	}
 
-	public SaturatingCounter(String filename) {
+	public GShare(String filename) {
 		super(filename);
 	}
 
@@ -38,22 +38,26 @@ public class SaturatingCounter extends BranchPredictor {
 		BranchPredictor predictor;
 
 		if (args.length > 0)
-			predictor = new SaturatingCounter(args[0]);
+			predictor = new GShare(args[0]);
 		else
-			predictor = new SaturatingCounter();
+			predictor = new GShare();
 
 		predictor.readInput();
 	}
 
+	@Override
 	public boolean getPrediction(Long address, boolean didBranch) {
 		boolean prediction = false;
 
-		int index = getIndex(address);
+		int index = getIndex(address) ^ globalBhsr;
 
-		if (didBranch)
-			branchHistoryTable[index] = incrementState(branchHistoryTable[index]);
-		else
-			branchHistoryTable[index] = decrementState(branchHistoryTable[index]);
+		globalBhsr <<= 1;
+		globalBhsr %= SIZE;
+		if (didBranch) {
+			globalBhsr++;
+			patternHistoryTable[index] = incrementState(patternHistoryTable[index]);
+		} else
+			patternHistoryTable[index] = decrementState(patternHistoryTable[index]);
 
 		prediction = predictBranch(index);
 
@@ -65,20 +69,24 @@ public class SaturatingCounter extends BranchPredictor {
 		return prediction;
 	}
 
+	@Override
 	public int getIndex(Long address) {
 		return new Long(address % SIZE).intValue();
 	}
 
+	@Override
 	public int incrementState(int state) {
 		return (state + 1 < (1 << N)) ? state + 1 : state;
 	}
 
+	@Override
 	public int decrementState(int state) {
 		return (state - 1 >= 0) ? state - 1 : state;
 	}
 
+	@Override
 	public boolean predictBranch(int index) {
-		return (branchHistoryTable[index] >= (1 << (N - 1)));
+		return (patternHistoryTable[index] >= (1 << (N - 1)));
 	}
 
 }
