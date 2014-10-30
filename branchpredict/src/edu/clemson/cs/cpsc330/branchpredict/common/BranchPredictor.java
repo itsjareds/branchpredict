@@ -15,13 +15,15 @@ import java.io.InputStreamReader;
  */
 public abstract class BranchPredictor implements BranchPredictorInterface {
 
-	protected BranchLog bl = new BranchLog();
+	protected BranchLog bl;
 
-	public BranchPredictor() {
-
+	public BranchPredictor(int indexSize) {
+		bl = new BranchLog(indexSize);
 	}
 
-	public BranchPredictor(String filename) {
+	public BranchPredictor(int indexSize, String filename) {
+		bl = new BranchLog(indexSize);
+
 		// Input coming from plaintext file
 		try {
 			System.setIn(new FileInputStream(filename));
@@ -49,11 +51,12 @@ public abstract class BranchPredictor implements BranchPredictorInterface {
 
 						boolean prediction = getPrediction(address, didBranch);
 
-						if (bl.getEntries() >= 0 && bl.getEntries() <= 20) {
-							System.out.println(addressStr + " "
-									+ (didBranch ? 1 : 0) + " "
-									+ (prediction ? 1 : 0));
-						}
+						// if (bl.getEntries() >= 0
+						// && bl.getEntries() <= 20) {
+						// System.out.println(addressStr + " "
+						// + (didBranch ? 1 : 0) + " "
+						// + (prediction ? 1 : 0));
+						// }
 					} else {
 						System.out.println("Malformed input line: " + inputStr);
 						System.exit(1);

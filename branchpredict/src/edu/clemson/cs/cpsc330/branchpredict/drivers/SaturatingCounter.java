@@ -10,11 +10,12 @@ import edu.clemson.cs.cpsc330.branchpredict.common.BranchPredictor;
  * @author Shi Zheng
  *
  */
+@SuppressWarnings("unused")
 public class SaturatingCounter extends BranchPredictor {
 
 	private static final int N = 2;
-	private static final int INDEX_LAST_N_BITS = 16;
-	private static final int SIZE = 1 << INDEX_LAST_N_BITS;
+	private static final int INDEX_N_BITS = 16;
+	private static final int SIZE = 1 << INDEX_N_BITS;
 
 	private static int[] branchHistoryTable = new int[SIZE];
 
@@ -26,11 +27,11 @@ public class SaturatingCounter extends BranchPredictor {
 	}
 
 	public SaturatingCounter() {
-		super();
+		super(INDEX_N_BITS);
 	}
 
 	public SaturatingCounter(String filename) {
-		super(filename);
+		super(INDEX_N_BITS, filename);
 	}
 
 	/**
@@ -52,12 +53,12 @@ public class SaturatingCounter extends BranchPredictor {
 
 		int index = getIndex(address);
 
+		prediction = predictBranch(index);
+
 		if (didBranch)
 			branchHistoryTable[index] = incrementState(branchHistoryTable[index]);
 		else
 			branchHistoryTable[index] = decrementState(branchHistoryTable[index]);
-
-		prediction = predictBranch(index);
 
 		if (prediction == didBranch)
 			bl.incrementSuccesses();

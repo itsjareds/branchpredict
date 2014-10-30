@@ -9,11 +9,12 @@ import edu.clemson.cs.cpsc330.branchpredict.common.BranchPredictor;
  * @author jared
  *
  */
+@SuppressWarnings("unused")
 public class GShare extends BranchPredictor {
 
 	private static final int N = 2;
-	private static final int INDEX_LAST_N_BITS = 16;
-	private static final int SIZE = 1 << INDEX_LAST_N_BITS;
+	private static final int INDEX_N_BITS = 16;
+	private static final int SIZE = 1 << INDEX_N_BITS;
 
 	private static int[] patternHistoryTable = new int[SIZE];
 	private static int globalBhsr = 0;
@@ -26,11 +27,11 @@ public class GShare extends BranchPredictor {
 	}
 
 	public GShare() {
-		super();
+		super(INDEX_N_BITS);
 	}
 
 	public GShare(String filename) {
-		super(filename);
+		super(INDEX_N_BITS, filename);
 	}
 
 	/**
@@ -55,13 +56,14 @@ public class GShare extends BranchPredictor {
 
 		globalBhsr <<= 1;
 		globalBhsr %= SIZE;
+
+		prediction = predictBranch(index);
+
 		if (didBranch) {
 			globalBhsr++;
 			patternHistoryTable[index] = incrementState(patternHistoryTable[index]);
 		} else
 			patternHistoryTable[index] = decrementState(patternHistoryTable[index]);
-
-		prediction = predictBranch(index);
 
 		if (prediction == didBranch)
 			bl.incrementSuccesses();

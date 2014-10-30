@@ -11,9 +11,14 @@ import java.text.DecimalFormat;
  *
  */
 public class BranchLog {
+	private final int INDEX_LAST_N_BITS;
 	private int successes = 0;
 	private int failures = 0;
 	private int entries = 0;
+
+	public BranchLog(final int N) {
+		INDEX_LAST_N_BITS = N;
+	}
 
 	public int getSuccesses() {
 		return successes;
@@ -39,6 +44,10 @@ public class BranchLog {
 		this.entries++;
 	}
 
+	public int getIndexSize() {
+		return INDEX_LAST_N_BITS;
+	}
+
 	public String getPercentString() {
 		Float percent = 0.0f;
 
@@ -49,7 +58,8 @@ public class BranchLog {
 	}
 
 	public void printStatistics() {
-		System.out.println(this.getEntries() + " entries: mispredicts = "
+		System.out.println((1 << this.getIndexSize()) + " entries ("
+				+ this.getIndexSize() + "-bit index): mispredicts = "
 				+ this.getFailures() + ", rate = " + this.getPercentString());
 	}
 }
