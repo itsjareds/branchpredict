@@ -16,9 +16,9 @@ import edu.clemson.cs.cpsc330.branchpredict.common.BranchLog;
  *
  */
 public class SaturatingCounter {
-	private final static int N = 9;
-	private final static int INDEX_N_BITS = 16;
-	private final static int SIZE = (int) Math.pow(2, INDEX_N_BITS);
+	private final static int N = 2;
+	private final static int INDEX_LAST_N_BITS = 16;
+	private final static int SIZE = (int) Math.pow(2, INDEX_LAST_N_BITS);
 
 	private static int[] branchHistory = new int[SIZE];
 	private static BranchLog bl = new BranchLog();
