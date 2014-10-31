@@ -12,21 +12,27 @@ import edu.clemson.cs.cpsc330.branchpredict.common.BranchPredictor;
  */
 public class BranchTargetBuffer extends BranchPredictor {
 
-	private static final int N = 2;
-	private static final int BHT_INDEX_N_BITS = 9;
-	private static final int BHT_SIZE = 1 << BHT_INDEX_N_BITS;
-	private static final int BHSR_N_BITS = 4;
-	private static final int PHT_SIZE = 1 << BHSR_N_BITS;
+	private final int N = 2;
+	private int BHT_INDEX_N_BITS;
+	private int BHSR_N_BITS;
 
-	private static int[] branchHistoryTable = new int[BHT_SIZE];
-	private static int[] patternHistoryTable = new int[BHT_SIZE * PHT_SIZE];
+	private int[] branchHistoryTable;
+	private int[] patternHistoryTable;
 
-	public BranchTargetBuffer() {
-		super(BHT_INDEX_N_BITS);
+	public BranchTargetBuffer(int index_n, int bhsr_n) {
+		super(index_n);
+		BHT_INDEX_N_BITS = index_n;
+		BHSR_N_BITS = bhsr_n;
+		branchHistoryTable = new int[getBhtSize()];
+		patternHistoryTable = new int[getBhtSize() * getPhtSize()];
 	}
 
-	public BranchTargetBuffer(String filename) {
-		super(BHT_INDEX_N_BITS, filename);
+	public BranchTargetBuffer(int index_n, int bhsr_n, String filename) {
+		super(index_n, filename);
+		BHT_INDEX_N_BITS = index_n;
+		BHSR_N_BITS = bhsr_n;
+		branchHistoryTable = new int[getBhtSize()];
+		patternHistoryTable = new int[getBhtSize() * getPhtSize()];
 	}
 
 	/**
@@ -35,10 +41,13 @@ public class BranchTargetBuffer extends BranchPredictor {
 	public static void main(String[] args) {
 		BranchPredictor predictor;
 
+		int index_n = 9;
+		int bhsr_n = 4;
+
 		if (args.length > 0)
-			predictor = new BranchTargetBuffer(args[0]);
+			predictor = new BranchTargetBuffer(index_n, bhsr_n, args[0]);
 		else
-			predictor = new BranchTargetBuffer();
+			predictor = new BranchTargetBuffer(index_n, bhsr_n);
 
 		predictor.readInput();
 	}
@@ -49,10 +58,10 @@ public class BranchTargetBuffer extends BranchPredictor {
 
 		int bhtIndex = getIndex(address);
 		int phtIndex = ((bhtIndex << BHSR_N_BITS) | branchHistoryTable[bhtIndex])
-				% (BHT_SIZE * PHT_SIZE);
+				% (getBhtSize() * getPhtSize());
 
 		branchHistoryTable[bhtIndex] <<= 1;
-		branchHistoryTable[bhtIndex] %= PHT_SIZE;
+		branchHistoryTable[bhtIndex] %= getPhtSize();
 
 		prediction = predictBranch(phtIndex);
 
@@ -72,7 +81,7 @@ public class BranchTargetBuffer extends BranchPredictor {
 
 	@Override
 	public int getIndex(Long address) {
-		return new Long(address % BHT_SIZE).intValue();
+		return new Long(address % getBhtSize()).intValue();
 	}
 
 	@Override
@@ -88,6 +97,14 @@ public class BranchTargetBuffer extends BranchPredictor {
 	@Override
 	public boolean predictBranch(int index) {
 		return (patternHistoryTable[index] >= (1 << (N - 1)));
+	}
+
+	private int getBhtSize() {
+		return 1 << BHT_INDEX_N_BITS;
+	}
+
+	private int getPhtSize() {
+		return 1 << BHSR_N_BITS;
 	}
 
 }

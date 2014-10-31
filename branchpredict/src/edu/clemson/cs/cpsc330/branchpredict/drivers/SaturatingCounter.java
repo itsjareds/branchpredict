@@ -14,11 +14,10 @@ import edu.clemson.cs.cpsc330.branchpredict.common.BranchPredictor;
 @SuppressWarnings("unused")
 public class SaturatingCounter extends BranchPredictor {
 
-	private static final int N = 2;
-	private static final int INDEX_N_BITS = 16;
-	private static final int SIZE = 1 << INDEX_N_BITS;
+	private final int N = 2;
+	private int INDEX_N_BITS;
 
-	private static int[] branchHistoryTable = new int[SIZE];
+	private int[] branchHistoryTable;
 
 	{
 		if (N < 1) {
@@ -27,24 +26,40 @@ public class SaturatingCounter extends BranchPredictor {
 		}
 	}
 
-	public SaturatingCounter() {
-		super(INDEX_N_BITS);
+	public SaturatingCounter(int n) {
+		super(n);
+		INDEX_N_BITS = n;
+		branchHistoryTable = new int[getSize()];
 	}
 
-	public SaturatingCounter(String filename) {
-		super(INDEX_N_BITS, filename);
+	public SaturatingCounter(int n, String filename) {
+		super(n, filename);
+		INDEX_N_BITS = n;
+		branchHistoryTable = new int[getSize()];
 	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		BranchPredictor predictor;
+		BranchPredictor predictor = null;
 
-		if (args.length > 0)
-			predictor = new SaturatingCounter(args[0]);
-		else
-			predictor = new SaturatingCounter();
+		try {
+			if (args.length >= 2)
+				predictor = new SaturatingCounter(Integer.parseInt(args[0]),
+						args[1]);
+			else if (args.length >= 1)
+				predictor = new SaturatingCounter(Integer.parseInt(args[0]));
+			else
+				predictor = new GShare(16);
+		} catch (NumberFormatException e) {
+			// will be handled with null check
+		}
+
+		if (predictor == null) {
+			System.out.println("Syntax: <program> n_bit_index [input file]");
+			System.exit(1);
+		}
 
 		predictor.readInput();
 	}
@@ -70,7 +85,7 @@ public class SaturatingCounter extends BranchPredictor {
 	}
 
 	public int getIndex(Long address) {
-		return new Long(address % SIZE).intValue();
+		return new Long(address % getSize()).intValue();
 	}
 
 	public int incrementState(int state) {
@@ -83,6 +98,10 @@ public class SaturatingCounter extends BranchPredictor {
 
 	public boolean predictBranch(int index) {
 		return (branchHistoryTable[index] >= (1 << (N - 1)));
+	}
+
+	private int getSize() {
+		return 1 << INDEX_N_BITS;
 	}
 
 }

@@ -13,12 +13,11 @@ import edu.clemson.cs.cpsc330.branchpredict.common.BranchPredictor;
 @SuppressWarnings("unused")
 public class GShare extends BranchPredictor {
 
-	private static final int N = 2;
-	private static final int INDEX_N_BITS = 16;
-	private static final int SIZE = 1 << INDEX_N_BITS;
+	private final int N = 2;
+	private int INDEX_N_BITS;
 
-	private static int[] patternHistoryTable = new int[SIZE];
-	private static int globalBhsr = 0;
+	private int[] patternHistoryTable;
+	private int globalBhsr = 0;
 
 	{
 		if (N < 1) {
@@ -27,24 +26,39 @@ public class GShare extends BranchPredictor {
 		}
 	}
 
-	public GShare() {
-		super(INDEX_N_BITS);
+	public GShare(int n) {
+		super(n);
+		INDEX_N_BITS = n;
+		patternHistoryTable = new int[getSize()];
 	}
 
-	public GShare(String filename) {
-		super(INDEX_N_BITS, filename);
+	public GShare(int n, String filename) {
+		super(n, filename);
+		INDEX_N_BITS = n;
+		patternHistoryTable = new int[getSize()];
 	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		BranchPredictor predictor;
+		BranchPredictor predictor = null;
 
-		if (args.length > 0)
-			predictor = new GShare(args[0]);
-		else
-			predictor = new GShare();
+		try {
+			if (args.length >= 2)
+				predictor = new GShare(Integer.parseInt(args[0]), args[1]);
+			else if (args.length >= 1)
+				predictor = new GShare(Integer.parseInt(args[0]));
+			else
+				predictor = new GShare(16);
+		} catch (NumberFormatException e) {
+			// will be handled with null check
+		}
+
+		if (predictor == null) {
+			System.out.println("Syntax: <program> n_bit_index [input file]");
+			System.exit(1);
+		}
 
 		predictor.readInput();
 	}
@@ -56,7 +70,7 @@ public class GShare extends BranchPredictor {
 		int index = getIndex(address) ^ globalBhsr;
 
 		globalBhsr <<= 1;
-		globalBhsr %= SIZE;
+		globalBhsr %= getSize();
 
 		prediction = predictBranch(index);
 
@@ -76,7 +90,7 @@ public class GShare extends BranchPredictor {
 
 	@Override
 	public int getIndex(Long address) {
-		return new Long(address % SIZE).intValue();
+		return new Long(address % getSize()).intValue();
 	}
 
 	@Override
@@ -92,6 +106,10 @@ public class GShare extends BranchPredictor {
 	@Override
 	public boolean predictBranch(int index) {
 		return (patternHistoryTable[index] >= (1 << (N - 1)));
+	}
+
+	private int getSize() {
+		return 1 << INDEX_N_BITS;
 	}
 
 }
