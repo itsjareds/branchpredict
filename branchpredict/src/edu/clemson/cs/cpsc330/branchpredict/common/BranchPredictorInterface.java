@@ -1,5 +1,13 @@
 package edu.clemson.cs.cpsc330.branchpredict.common;
 
+/**
+ * BranchPredictorInterface is an interface for any BranchPredictor
+ * implementation. It includes methods for predictions occurring iteratively
+ * within a loop.
+ * 
+ * @author Jared Klingenberber <klinge2@clemson.edu>
+ * @author Shi Zheng <shiz@clemson.edu>
+ */
 public interface BranchPredictorInterface {
 	public void readInput();
 

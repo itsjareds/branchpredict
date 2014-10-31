@@ -1,14 +1,15 @@
-/**
- * N-bit Saturating Counter Branch Predictor
- */
 package edu.clemson.cs.cpsc330.branchpredict.drivers;
 
 import edu.clemson.cs.cpsc330.branchpredict.common.BranchPredictor;
 
 /**
+ * SaturatingCounter is an implementation of an n-bit Saturating Counter branch
+ * predictor. It maintains a Branch History Table that contains an n-bit state.
+ * If the state is greater than or equal to 2^(n-1), then the branch is
+ * predicted taken.
+ * 
  * @author Jared Klingenberger
  * @author Shi Zheng
- *
  */
 @SuppressWarnings("unused")
 public class SaturatingCounter extends BranchPredictor {

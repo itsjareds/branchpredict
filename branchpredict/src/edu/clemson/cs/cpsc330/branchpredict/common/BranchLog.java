@@ -1,14 +1,13 @@
-/**
- * 
- */
 package edu.clemson.cs.cpsc330.branchpredict.common;
 
 import java.text.DecimalFormat;
 
 /**
+ * BranchLog is a utility class that logs statistics for Branch Predictors. It
+ * includes a convenience method for printing out the collected statistics.
+ * 
  * @author Jared Klingenberger <klinge2@clemson.edu>
  * @author Shi Zheng <shiz@clemson.edu>
- *
  */
 public class BranchLog {
 	private final int INDEX_LAST_N_BITS;

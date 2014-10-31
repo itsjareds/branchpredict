@@ -1,6 +1,3 @@
-/**
- * 
- */
 package edu.clemson.cs.cpsc330.branchpredict.common;
 
 import java.io.BufferedReader;
@@ -9,9 +6,12 @@ import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 
 /**
+ * BranchPredictor is an abstract class that implements necessary auxiliary
+ * functionality (i.e. reading and parsing input strings) and also contains a
+ * BranchLog instance to log statistics information.
+ * 
  * @author Jared Klingenberger <klinge2@clemson.edu>
  * @author Shi Zheng <shiz@clemson.edu>
- *
  */
 public abstract class BranchPredictor implements BranchPredictorInterface {
 
@@ -49,14 +49,7 @@ public abstract class BranchPredictor implements BranchPredictorInterface {
 						Long address = Long.parseLong(addressStr, 16);
 						boolean didBranch = (Integer.parseInt(tokens[1]) == 1);
 
-						boolean prediction = getPrediction(address, didBranch);
-
-						// if (bl.getEntries() >= 0
-						// && bl.getEntries() <= 20) {
-						// System.out.println(addressStr + " "
-						// + (didBranch ? 1 : 0) + " "
-						// + (prediction ? 1 : 0));
-						// }
+						getPrediction(address, didBranch);
 					} else {
 						System.out.println("Malformed input line: " + inputStr);
 						System.exit(1);

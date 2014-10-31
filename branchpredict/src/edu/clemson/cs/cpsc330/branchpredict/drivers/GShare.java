@@ -1,13 +1,14 @@
-/**
- * 
- */
 package edu.clemson.cs.cpsc330.branchpredict.drivers;
 
 import edu.clemson.cs.cpsc330.branchpredict.common.BranchPredictor;
 
 /**
- * @author jared
- *
+ * GShare is an implementation of a gshare branch predictor. It uses a Pattern
+ * History Table indexed with an instruction address xor'ed with a global Branch
+ * History Shift Register (as an Integer).
+ * 
+ * @author Jared Klingenberger <klinge2@clemson.edu>
+ * @author Shi Zheng <shiz@clemson.edu>
  */
 @SuppressWarnings("unused")
 public class GShare extends BranchPredictor {

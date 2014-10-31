@@ -1,14 +1,14 @@
-/**
- * 
- */
 package edu.clemson.cs.cpsc330.branchpredict.drivers;
 
 import edu.clemson.cs.cpsc330.branchpredict.common.BranchPredictor;
 
 /**
+ * BranchTargetBuffer is an implementation of a P6-like branch predictor. It
+ * maintains a Branch History Table and a Pattern History Table to implement
+ * 2-level adaptive branch prediction.
+ * 
  * @author Jared Klingenberger <klinge2@clemson.edu>
  * @author Shi Zheng <shiz@clemson.edu>
- *
  */
 public class BranchTargetBuffer extends BranchPredictor {
 
