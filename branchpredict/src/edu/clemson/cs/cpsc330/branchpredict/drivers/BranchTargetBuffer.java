@@ -13,7 +13,7 @@ import edu.clemson.cs.cpsc330.branchpredict.common.BranchPredictor;
 public class BranchTargetBuffer extends BranchPredictor {
 
 	private static final int N = 2;
-	private static final int BHT_INDEX_N_BITS = 16;
+	private static final int BHT_INDEX_N_BITS = 9;
 	private static final int BHT_SIZE = 1 << BHT_INDEX_N_BITS;
 	private static final int BHSR_N_BITS = 4;
 	private static final int PHT_SIZE = 1 << BHSR_N_BITS;
@@ -48,7 +48,8 @@ public class BranchTargetBuffer extends BranchPredictor {
 		boolean prediction = false;
 
 		int bhtIndex = getIndex(address);
-		int phtIndex = branchHistoryTable[bhtIndex] % PHT_SIZE;
+		int phtIndex = ((bhtIndex << BHSR_N_BITS) | branchHistoryTable[bhtIndex])
+				% (BHT_SIZE * PHT_SIZE);
 
 		branchHistoryTable[bhtIndex] <<= 1;
 		branchHistoryTable[bhtIndex] %= PHT_SIZE;
