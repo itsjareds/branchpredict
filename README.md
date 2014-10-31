@@ -12,9 +12,9 @@ This project includes three branch prediction algorithm implementations in Java:
 
 How to execute the programs
 ===========================
-    gzcat server_trace_1_4M.txt.gz | java -jar saturatingcounter.jar
-    gzcat server_trace_1_4M.txt.gz | java -jar gshare.jar
-    gzcat server_trace_1_4M.txt.gz | java -jar branchtargetbuffer.jar
+    gunzip -c server_trace_1_4M.txt.gz | java -jar saturatingcounter.jar
+    gunzip -c server_trace_1_4M.txt.gz | java -jar gshare.jar
+    gunzip -c server_trace_1_4M.txt.gz | java -jar branchtargetbuffer.jar
 
 Or, a convenience bash script has been included to run all three at once:
 `sh run.sh`
