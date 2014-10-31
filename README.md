@@ -19,6 +19,10 @@ How to execute the programs
 Or, a convenience bash script has been included to run all three at once:
 `sh run.sh`
 
+Document
+========
+A Word document with related graphs and statistical data is included in 330P2.docx.
+
 Notes
 =====
 This project was written for CpSc 3300 (Computer Systems Organization) at Clemson University.
