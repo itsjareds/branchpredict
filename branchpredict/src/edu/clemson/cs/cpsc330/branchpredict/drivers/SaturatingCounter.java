@@ -51,7 +51,7 @@ public class SaturatingCounter extends BranchPredictor {
 			else if (args.length >= 1)
 				predictor = new SaturatingCounter(Integer.parseInt(args[0]));
 			else
-				predictor = new GShare(16);
+				predictor = new SaturatingCounter(16);
 		} catch (NumberFormatException e) {
 			// will be handled with null check
 		}
